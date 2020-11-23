@@ -1,0 +1,26 @@
+{
+  "name": "kahal_chesed_vemes_backend",
+  "version": "1.0.0",
+  "description": "backend for shule website",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nateweis/Kahal_Chesed_Vemes_Backend.git"
+  },
+  "author": "Nate Weiss",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nateweis/Kahal_Chesed_Vemes_Backend/issues"
+  },
+  "homepage": "https://github.com/nateweis/Kahal_Chesed_Vemes_Backend#readme",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "pg-promise": "^10.8.0"
+  }
+}
