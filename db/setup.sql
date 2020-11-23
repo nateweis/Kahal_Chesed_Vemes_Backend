@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS kcv_db;
+CREATE DATABASE kcv_db;
+\c kcv_db;
