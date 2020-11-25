@@ -1,4 +1,5 @@
 const express = require('express')
+require('dotenv').config()
 
 const app = express();
 const port = process.env.PORT || 3001 ; 
@@ -26,4 +27,4 @@ app.use((req, res, next) => {
 const userContoller = require('./controllers/userRoutes')
 app.use('/users', userContoller)
 
-app.listen(port, ()=>{console.log("Khala Chesed Vemes backend is running on port "+ port )})
+app.listen(port, ()=>{console.log("Khala Chesed Vemes backend is running on port "+ port + (process.env.PORT? " :: env working" : " ") )})
