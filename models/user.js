@@ -9,8 +9,7 @@ function checkUserExistance(name, callback){
     let holdData = 0
     db.any('SELECT * FROM users WHERE username = $1', name)
     .then(data => {
-       holdData= callback(data)
-       return holdData
+       callback(data.length)
     })
     .catch(err => console.log(err))
     
@@ -18,21 +17,35 @@ function checkUserExistance(name, callback){
 
 
 const newUser = (req, res) => {
-    req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
-    db.none('INSERT INTO users (username, password, email, admin) VALUES (${username}, ${password}, ${email}, ${admin})', req.body)
-    .then(()=>res.json({message:"Username Made"}))
-    .catch(err=> res.json({err, message:"User not made"}))
+    checkUserExistance(req.body.username, d => { 
+        if(d === 0) {
+            req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
+            db.none('INSERT INTO users (username, password, email, admin) VALUES (${username}, ${password}, ${email}, ${admin})', req.body)
+            .then(()=>res.json({message:"User Made"}))
+            .catch(err=> res.json({err, message:"User not made"}))
+        }
+        else res.json({message: "Username already exists"})
+    })
+
 }
 
 const login = (req, res ) => {
-    console.log(checkUserExistance(req.body.username, d => { return d}))
-    db.any('SELECT * FROM users WHERE username = $1', req.body.username)
+    db.one('SELECT * FROM users WHERE username = $1', req.body.username)
     .then(data => {
-        // console.log(data)
+        if(bcrypt.compareSync(req.body.password, data.password)){
+            jwt.sign({data:"This is the payload"}, secret, {expiresIn: '1d'}, 
+            (err, token)=>{res.status(201).append('Accept','true').json({token})}
+            )
+        }
+        else res.json({message: "wrong username or Password"})
     })
-    jwt.sign({data:"This is the payload"}, secret, {expiresIn: '1d'}, 
-    (err, token)=>{res.status(201).append('Accept','true').json({token})}
-    )
+    .catch(err => {
+        // console.log("oopsie")
+        // console.log(err)
+        res.json({message: "wrong Username or password"})
+    })
+
+
 }
 
 module.exports = {
