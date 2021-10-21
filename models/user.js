@@ -5,27 +5,29 @@ require('dotenv').config()
 const secret = process.env.SECRET
 
 // Goes through the database to see if the username is already taken
-function checkUserExistance(name, callback){
-    let holdData = 0
-    db.any('SELECT * FROM users WHERE username = $1', name)
-    .then(data => {
-       callback(data.length)
-    })
-    .catch(err => console.log(err))
+function checkUserExistance(name){
+    return new Promise((resolve, reject) => {
+        let holdData = 0
+        db.any('SELECT * FROM users WHERE username = $1', name)
+        .then(data => {
+           resolve(data.length)
+        })
+        .catch(err => console.log(err))
+    }
+    )
     
 }
+ 
 
-
-const newUser = (req, res) => {
-    checkUserExistance(req.body.username, d => { 
-        if(d === 0) {
-            req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
-            db.none('INSERT INTO users (username, password, email, admin) VALUES (${username}, ${password}, ${email}, ${admin})', req.body)
-            .then(()=>res.json({message:"User Made"}))
-            .catch(err=> res.json({err, message:"User not made"}))
-        }
-        else res.json({message: "Username already exists"})
-    })
+const newUser = async (req, res) => {
+    const d = await checkUserExistance(req.body.username) // can also use .then() for promises like ive been using so far, but giving async/await a wirl 
+    if(d === 0) {
+        req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
+        db.none('INSERT INTO users (username, password, email, admin) VALUES (${username}, ${password}, ${email}, ${admin})', req.body)
+        .then(()=>res.json({message:"User Made"}))
+        .catch(err=> res.json({err, message:"User not made"}))
+    }
+    else res.json({message: "Username already exists"})
 
 }
 
