@@ -2,6 +2,9 @@
   "name": "kahal_chesed_vemes_backend",
   "version": "1.0.0",
   "description": "backend for shule website",
+  "engines": {
+    "node": "12.4.0"
+  },
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
