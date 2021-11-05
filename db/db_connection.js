@@ -2,9 +2,21 @@ const promise = require('bluebird');
 const options = {
     promiseLib : promise
 }
-const pgp = require('pg-promise')(options);
-const connectionString = process.env.DATABASE_URL || 'postgres://postgres:uspumpdatabase@localhost:5432/kcv_db'; 
-const db = pgp(connectionString);
+
+let ssl = null
+if(process.env.DATABASE_URL) ssl = {rejectUnauthorized: false}
+
+const pgp = require('pg-promise')( options);
+const cString = process.env.DATABASE_URL || 'postgres://postgres:uspumpdatabase@localhost:5432/kcv_db';
+const config = {
+    connectionString: cString,
+    max:30,
+    ssl: ssl
+}
+const db = pgp(config);
 db.connect();
 
-module.exports = db;
+
+
+
+module.exports = db
