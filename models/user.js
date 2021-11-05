@@ -36,7 +36,7 @@ const login = (req, res ) => {
     .then(data => {
         if(bcrypt.compareSync(req.body.password, data.password)){
             jwt.sign({data:"This is the payload"}, secret, {expiresIn: '1d'}, 
-            (err, token)=>{res.status(201).append('Accept','true').json({token, msg: 'loggedIn', err})}
+            (err, token)=>{res.status(201).append('Accept','true').json({token, err})}
             )
         }
         else res.json({message: "wrong username or Password"})
