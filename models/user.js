@@ -32,21 +32,21 @@ const newUser = async (req, res) => {
 }
 
 const login = (req, res ) => {
-    res.json(req.body)
-    // db.one('SELECT * FROM users WHERE username = $1', req.body.username)
-    // .then(data => {
-    //     if(bcrypt.compareSync(req.body.password, data.password)){
-    //         jwt.sign({data:"This is the payload"}, secret, {expiresIn: '1d'}, 
-    //         (err, token)=>{res.status(201).append('Accept','true').json({token})}
-    //         )
-    //     }
-    //     else res.json({message: "wrong username or Password"})
-    // })
-    // .catch(err => {
-    //     // console.log("oopsie")
-    //     // console.log(err)
-    //     res.json({message: "wrong Username or password"})
-    // })
+    db.one('SELECT * FROM users WHERE username = $1', req.body.username)
+    .then(data => {
+        res.json({data})
+        // if(bcrypt.compareSync(req.body.password, data.password)){
+        //     jwt.sign({data:"This is the payload"}, secret, {expiresIn: '1d'}, 
+        //     (err, token)=>{res.status(201).append('Accept','true').json({token})}
+        //     )
+        // }
+        // else res.json({message: "wrong username or Password"})
+    })
+    .catch(err => {
+        // console.log("oopsie")
+        // console.log(err)
+        res.json({message: "wrong Username or password"})
+    })
 
 
 }
