@@ -29,6 +29,9 @@ app.use((req, res, next) => {
 const userContoller = require('./controllers/userRoutes')
 app.use('/users', userContoller)
 
+const msgContoller = require('./controllers/msgRoutes')
+app.use('/messages', userContoller)
+
 // Stripe Charge Route
 app.post("/stripeCheckout", async (req, res) => {
   console.log("Request:", req.body);
