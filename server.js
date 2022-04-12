@@ -1,7 +1,7 @@
 const express = require('express')
 require('dotenv').config()
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const uuid = require("uuid/v4");
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const port = process.env.PORT || 3001 ; 
@@ -43,10 +43,10 @@ app.post("/stripeCheckout", async (req, res) => {
       source: token.id
     });
 
-    const idempotency_key = uuid();
+    const idempotencyKey = uuidv4();
     const charge = await stripe.charges.create(
       {
-        amount: product.amount,
+        amount: product.amount[0],
         currency: "usd",
         customer: customer.id,
         receipt_email: token.email,
@@ -63,7 +63,7 @@ app.post("/stripeCheckout", async (req, res) => {
         }
       },
       {
-        idempotency_key
+        idempotencyKey
       }
     );
     console.log("Charge:", { charge });
